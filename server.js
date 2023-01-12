@@ -30,7 +30,7 @@ app.post("/upload-file", (req, res) => {
     if (err) return res.status(500).send(err);
 
     const create = await Files.create({
-      img: `http://localhost:3001/upload/${filename}`,
+      img: `http://localhost:3001/upload/${filename}`, //websiteurl::filename
     });
     return res.status(201).json(create);
   });
