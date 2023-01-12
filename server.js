@@ -2,13 +2,19 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
+
 const path = require("path");
+const connectDb = require("./config/dbConnect");
 const fileUpload = require("express-fileupload");
+const Files = require("./model/files");
+
+connectDb();
 
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/upload", express.static(path.join(__dirname, "upload")));
 app.use(fileUpload());
 
 app.post("/upload-file", (req, res) => {
@@ -20,11 +26,18 @@ app.post("/upload-file", (req, res) => {
 
   let uploadPath = path.join(__dirname, "/upload/" + filename);
 
-  req.files.img.mv(uploadPath, (err) => {
+  req.files.img.mv(uploadPath, async (err) => {
     if (err) return res.status(500).send(err);
 
-    res.send("File uploaded!");
+    const create = await Files.create({
+      img: `http://localhost:3001/upload/${filename}`,
+    });
+    return res.status(201).json(create);
   });
+});
+
+app.get("/get", (req, res) => {
+  res.status(200).json(path.join(__dirname, "upload"));
 });
 
 const port = process.env.PORT || 3001;
