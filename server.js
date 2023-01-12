@@ -36,10 +36,6 @@ app.post("/upload-file", (req, res) => {
   });
 });
 
-app.get("/get", (req, res) => {
-  res.status(200).json(path.join(__dirname, "upload"));
-});
-
 const port = process.env.PORT || 3001;
 
 app.listen(port, () =>
