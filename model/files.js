@@ -5,6 +5,7 @@ const fileSchema = mongoose.Schema(
     img: {
       type: String,
       required: true,
+      trim: true,
     },
   },
   { timestamps: true }
